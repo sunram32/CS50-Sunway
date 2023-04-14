@@ -1,0 +1,61 @@
+{% extends "news/layout.html" %}
+{% load static %}
+
+{% block title %} 
+    Search: {{ keyword }}
+{% endblock %}
+
+{% block content %}
+    <script src="{% static 'news/search.js' %}" defer></script>
+    <h2 id="heading">Search Results for "{{ keyword }}" (<span id="resultCount">{{ numberOfResults }}</span> Results) </h2>
+    <button class="btn text-danger px-0 border-0" id="advancedSearchToggler">> Advanced Search</button>
+    <form class="d-none mb-4 col-md-6 col" id="advancedSearchForm">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" class="form-control" id="title" name="title" placeholder="Title of article">
+        </div>
+        <div class="mb-3">
+            <label for="author" class="form-label">Author</label>
+            <input type="text" class="form-control" id="author" name="author" placeholder="Author's name">
+        </div>
+        <div class="mb-3">
+            <label for="sort" class="form-label">Category</label>
+            <select class="form-select" id="sort" name="category">
+                <option disabled selected hidden>Select category</option>
+                <option value="politics">Politics</option>
+                <option value="world">World</option>
+                <option value="tech">Tech</option>
+                <option value="culture">Culture</option>
+                <option value="others">Others</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="sort" class="form-label">Sort By</label>
+            <select class="form-select" id="sort" name="orderBy">
+                <option disabled selected hidden>Select criterion</option>
+                <option value="date written">Date Written (Descending)</option>
+                <option value="alphabetical">Alphabetical</option>
+                <option value="popularity">Popularity (High to Low)</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-secondary">Advanced Search</button>
+    </form>
+    <!-- container for loading spinner when fetching articles for advanced search -->
+    <div class="d-flex justify-content-center mb-3" id="spinnerContainer"></div> 
+    <div id="articleContainer">
+        {% for article in articles %}
+            <div class="article clickableDiv d-flex align-items-center my-2 py-2 border-top" onclick="linkToArticlePage({{ article.id }})">
+                <img src="{{ article.picture.url }}" alt="" width="250px" height="150px" class="searchImg me-3">
+                <div>
+                    <p class="fw-bold text-danger mb-1">{{ article.category }}</p>
+                    <h4>{{ article.title }}</h3>
+                    <p class="text-secondary">{{ article.author.name }}, {{ article.date_written }}</p>
+                    <button class="btn border-0 text-danger p-0">+ Read Later</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <ul class="pagination justify-content-center mt-4">
+
+    </ul>
+{% endblock %}

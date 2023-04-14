@@ -1,0 +1,44 @@
+{% extends "news/layout.html" %} 
+{% load static %}
+
+{% block title %} 
+    {{ user.first_name }} {{ user.last_name }}
+{% endblock %}
+
+{% block content %} 
+    <script src="{% static 'news/readingList.js' %}" defer></script>
+    <div class="row flex-row-reverse align-items-center justify-content-center mb-5 px-5 gx-5">
+        <div class="col-md-4 col-12">
+            <img src="{{ user.picture.url }}" alt="" class="authorImg ratio-1x1 d-block mx-auto rounded-circle w-75 mb-4 mb-md-0">
+        </div>
+        <div class="col-md-8 col-12">
+            <div class="lh-1 text-md-start text-center">
+                <h1 id="authorName">{{ user.first_name }}  {{ user.last_name }}</h1>
+                <p class="text-muted">Member Since: {{ user.date_joined.date }}</p>
+                <p class="text-muted">Email: {{ user.email }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="px-md-5 mb-5 mt-3" id="articles">
+        <h3 class=" mt-5">Reading List</h3>
+        {% for article in reading_list %}
+        <div class="articleReadingList d-flex align-items-center my-2 py-2 px-0 border-top justify-content-between" data-article-id="{{ article.id }}">
+            <div class="d-flex align-items-center clickableDiv" onclick="linkToArticlePage({{ article.id }})">
+                <img src="{{ article.picture.url }}" alt="" width="250px" height="150px" class="searchImg me-3">
+                <div>
+                    <p class="fw-bold text-danger mb-1">{{ article.category }}</p>
+                    <h4>{{ article.title }}</h3>
+                    <p class="text-secondary">{{ article.author.name }}, {{ article.date_written }}</p>
+                </div>
+            </div>
+            <form action="" method="post" class="readingListForm">
+                {% csrf_token %}
+                <input type="hidden" name="article_id" value="{{ article.id }}">
+                <button type="submit" class="btn border-none text-danger removeArticleReadingList">Remove</span>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- container for loading spinner when fetching articles for infinity scroll -->
+    <div class="d-flex justify-content-center mb-3" id="spinnerContainer"></div> 
+{% endblock %}

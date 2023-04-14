@@ -1,0 +1,86 @@
+{% extends "news/layout.html" %} 
+{% load static %}
+
+{% block title %} 
+    {{ article_details.title }}
+{% endblock %}
+
+{% block content %}
+    <script src="{% static 'news/articlePageModifyReadingList.js' %}" defer></script>
+    <div class="toast successComment align-items-center text-white bg-success border-0 fixed-top start-50 translate-middle-x" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Comment Added Successfully.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="toast successReadingList align-items-center text-white bg-success border-0 fixed-top start-50 translate-middle-x" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Status
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+    <article class="mx-auto pb-5">
+        <header class="pb-4  position-relative">
+            <p class="text-danger fw-bold text-center" id="category">— {{ article_details.category }} —</p>
+            <h1 class="text-center" id="title">{{ article_details.title }}</h1>
+            <div class="text-center pb-4" id="details">
+                <span class="authorLink text-danger fw-bold" id="author" onclick="linkToAuthorPage({{ article_details.author.id }})">{{ article_details.author.name }}</span>
+                <span class="text-secondary" id="separator">•</span>
+                <span id="date">{{ article_details.date_written }}</span>
+            </div>
+            <figure>
+                <img src="{{ article_details.picture.url }}" class="figure-img img-fluid mx-auto d-block">
+                <figcaption class="figure-caption text-end">Credit: {{ article_details.author.name }}</figcaption>
+            </figure>
+            <form action="" method="post" id="readingListForm">
+                {% csrf_token %}
+                <input type="hidden" name="article_id" value="{{ article_details.id }}">
+                {% if user.is_authenticated and in_reading_list %}
+                    <button type="submit" class="modifyReadingList position-absolute top-0 end-0 p-0 m-0 btn border-none" title="Remove From Reading List"><i class="fa fa-book fa-2x text-danger"></i></a>
+                {% elif user.is_authenticated and not in_reading_list %}
+                    <button type="submit" class="modifyReadingList position-absolute top-0 end-0 p-0 m-0 btn border-none" title="Add To Reading List"><i class="fa fa-book fa-2x text-success"></i></a>
+                {% endif %}
+            </form>
+        </header>
+        <div class="fs-5" id="article_content">
+            {{ content_html|safe }}
+        </div>
+    </article>
+
+    <section class="mx-auto pb-5" id="comments">
+        <div class="border-bottom pb-4">
+            <span class="h2 me-2">Comments</span><span class="text-secondary fw-bold">{{ article_comments.count }} Comments</span>
+        </div>
+        {% if user.is_authenticated %}
+            <form action="{% url 'submit_comment' %}" method="post" class="my-4">
+                {% csrf_token %}
+                <input type="text" name="comment" class="form-control" placeholder="Enter your comment">
+                <input type="hidden" name="article_id" value="{{ article_details.id }}">
+            </form>
+        {% else %} 
+            <h5 class="text-secondary mt-3 mb-4"><a href="{% url 'login' %}?next=article/{{ article_details.id }}" class="link-primary">Login</a> to make a comment</h6>
+        {% endif %}
+        {% for comment in article_comments %}
+            <div class="comment d-flex mt-3 mb-4 border-bottom">
+                <img src="{{ comment.user.picture.url }}" alt="" width="30" height="30" class="rounded-circle me-3">
+                <div class="comment-content">
+                    <div class="lh-1">
+                        <h6>{{ comment.user.first_name }} {{ comment.user.last_name }}</h6>
+                        <p class="text-secondary">{{ comment.time_commented }}</p>
+                    </div>
+                    <p>{{ comment.comment }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+    {% if commented %}
+        <script>
+            let toastSuccess = new bootstrap.Toast(document.querySelector('.successComment'));
+            toastSuccess.show()
+        </script>
+    {% endif %}
+{% endblock %}

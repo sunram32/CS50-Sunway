@@ -1,0 +1,51 @@
+.soc-mec-links  {
+    margin-left: 20px;
+}
+
+article, #comments {
+    max-width: 800px;
+}
+
+.searchImg, .authorImg, .indexArticleImage {
+    object-fit: cover;
+}
+
+.clickableDiv {
+    cursor: pointer;
+}
+
+.authorLink {
+    cursor: pointer;
+}
+
+/* hiding the dropdown when hamburger menu is enabled */
+@media (max-width: 992px) {
+    .dropdown-menu {
+        opacity: 0;
+    }
+}
+
+/* reading list deletion animation */
+@keyframes hide {
+    0% {
+        opacity: 1;
+        height: 100%;
+        line-height: 100%;
+        padding: 20px;
+        margin-bottom: 10px;
+    }
+    100% {
+        opacity: 0;
+        height: 0px;
+        line-height: 0px;
+        padding: 0px;
+        margin-bottom: 0px;
+    }
+}
+
+.articleReadingList {
+    animation-name: hide;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
+}

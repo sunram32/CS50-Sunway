@@ -1,0 +1,27 @@
+{% extends "news/layout.html" %} 
+
+{% block content %}
+    <div class="toast invalid align-items-center text-white bg-danger border-0 position-absolute start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+        <div class="toast-body">
+            Invalid Input. Please Try Again. 
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="loginFormContainer mx-auto col-lg-5 col-md-7 col-sm-9 col-11 border rounded shadow p-4 mb-5">
+        <h1 class="mb-4">Sign Up</h1>    
+        <form enctype="multipart/form-data" action="" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-secondary mt-3 mb-4">Sign Up</button>
+        </form>
+        <p class="text-secondary">Existing User? <a href="{% url 'login' %}" class="link-primary">Click here</a> to login</p>
+    </div>
+    {% if invalid_input %}
+        <script>
+            let toastInvalid = new bootstrap.Toast(document.querySelector('.invalid'));
+            toastInvalid.show()
+        </script>
+    {% endif %}
+{% endblock %}
