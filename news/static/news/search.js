@@ -77,7 +77,6 @@ function renderArticle(article) {
         <p class="text-danger fw-bold mb-1">${article.category}</p>
         <h4>${article.title}</h4>
         <p class="text-secondary">${article.author}, ${article.date_written}</p>
-        <button class="btn border-0 text-danger p-0">+ Read Later</button>
     </div>`;
     articleContainer.appendChild(newArticle);
 }
